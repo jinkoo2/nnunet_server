@@ -1,0 +1,194 @@
+[
+    {
+        "name": "Spleen",
+        "description": "Spleen Segmentation",
+        "reference": "Memorial Sloan Kettering Cancer Center",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 06/08/2018",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "spleen": 1
+        },
+        "numTraining": 41,
+        "numTest": 20,
+        "file_ending": ".nii.gz",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset009_Spleen"
+    },
+    {
+        "name": "CBCTBladderRectumBowel2",
+        "description": "Copy of CBCTBladderRectumBowel, but rectum is added",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "bladder": 1,
+            "rectum": 2,
+            "bowel": 3
+        },
+        "channel_names": {
+            "0": "CT"
+        },
+        "file_ending": ".mha",
+        "numTraining": 19,
+        "numTest": 0,
+        "id": "Dataset015_CBCTBladderRectumBowel2"
+    },
+    {
+        "name": "NewName5",
+        "description": "New description",
+        "reference": "Your institution",
+        "licence": "CC-BY-SA 4.0",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "label1": 1
+        },
+        "channel_names": {
+            "0": "CT"
+        },
+        "file_ending": ".mha",
+        "numTraining": 0,
+        "numTest": 0,
+        "id": "Dataset057_NewName5"
+    },
+    {
+        "name": "Eye[ul]L",
+        "description": "small test dataset",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 08/28/2024",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "eye[ul]l": 1
+        },
+        "numTraining": 43,
+        "numTest": 13,
+        "file_ending": ".mha",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset101_Eye[ul]L"
+    },
+    {
+        "name": "ProneLumpStessin",
+        "description": "Prone Lumpectomy Contours for Dr. Stessin",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 08/28/2024",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "eye[ul]l": 1
+        },
+        "numTraining": 366,
+        "numTest": 93,
+        "file_ending": ".mha",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset102_ProneLumpStessin"
+    },
+    {
+        "name": "CBCT[sp]Bladders[sp]For[sp]ART",
+        "description": "CBCTBladderART",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 08/28/2024",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "bladder": 1
+        },
+        "numTraining": 38,
+        "numTest": 19,
+        "file_ending": ".mha",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset103_CBCT[sp]Bladders[sp]For[sp]ART"
+    },
+    {
+        "name": "CBCTRectumBowel",
+        "description": "CBCTRectumBowel",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 08/28/2024",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "bladder": 1
+        },
+        "numTraining": 19,
+        "numTest": 19,
+        "file_ending": ".mha",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset104_CBCTRectumBowel"
+    },
+    {
+        "name": "CBCTBladderRectumBowel",
+        "description": "CBCTBladderRectumBowel",
+        "reference": "Stony Brook Univ Hospital",
+        "licence": "CC-BY-SA 4.0",
+        "release": "1.0 08/28/2024",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "bladder": 1,
+            "rectumbowel": 2
+        },
+        "numTraining": 19,
+        "numTest": 19,
+        "file_ending": ".mha",
+        "channel_names": {
+            "0": "CT"
+        },
+        "id": "Dataset105_CBCTBladderRectumBowel"
+    },
+    {
+        "name": "FourCirclesOnJawCalKv2",
+        "description": "four circle labels on jaw calibration plate kV images",
+        "reference": "SB",
+        "licence": "CC-BY-SA 4.0",
+        "tensorImageSize": "2D",
+        "labels": {
+            "background": 0,
+            "top left": 1,
+            "top right": 2,
+            "bottom left": 3,
+            "bottom right": 4
+        },
+        "channel_names": {
+            "0": "RI"
+        },
+        "file_ending": ".mha",
+        "numTraining": 20,
+        "numTest": 2,
+        "id": "Dataset847_FourCirclesOnJawCalKv2"
+    },
+    {
+        "name": "FourCirclesOnJawCalKv",
+        "description": "four circle labels on jaw calibration plate kV images",
+        "reference": "SB",
+        "licence": "CC-BY-SA 4.0",
+        "tensorImageSize": "3D",
+        "labels": {
+            "background": 0,
+            "top left": 1
+        },
+        "channel_names": {
+            "0": "CT"
+        },
+        "file_ending": ".mha",
+        "numTraining": 1,
+        "numTest": 0,
+        "id": "Dataset935_Test1"
+    }
+]
