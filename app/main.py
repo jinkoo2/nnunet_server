@@ -1,5 +1,6 @@
 from fastapi import FastAPI,Request
 from app.core.config import settings
+from fastapi.responses import JSONResponse
 import logging
 import time
 
@@ -23,15 +24,25 @@ async def log_requests(request: Request, call_next):
     )
     return response
 
-
 @app.get("/")
 def read_root():
     logger.debug("Root endpoint called")
     return {"app_name": settings.APP_NAME, "log_level": settings.LOG_LEVEL}
 
+@app.get("/ping")
+async def ping():
+    logger.info('/ping')
+    return {"msg": "Pong"}
+
+
 # routes
-from app.api.v1 import routes_jobs, routes_models, routes_status, routes_raw_dataset_json
-app.include_router(routes_raw_dataset_json.router, prefix="/api/v1/raw/datasets", tags=["RawDatasets"])
+from app.api.v1 import routes_jobs, routes_models, routes_status, routes_raw_dataset_json, routes_raw_images_and_labels, routes_plan_and_preprocess, routes_predictions
+#app.include_router(routes_raw_dataset_json.router, prefix="/api/v1/raw/datasets", tags=["RawDatasets"])
+app.include_router(routes_raw_dataset_json.router)
+app.include_router(routes_raw_images_and_labels.router)
+app.include_router(routes_plan_and_preprocess.router)
+app.include_router(routes_predictions.router)
+
 app.include_router(routes_jobs.router, prefix="/api/v1/jobs", tags=["Jobs"])
 app.include_router(routes_models.router, prefix="/api/v1/models", tags=["Models"])
 app.include_router(routes_status.router, prefix="/api/v1/status", tags=["Status"])

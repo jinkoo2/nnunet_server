@@ -50,7 +50,7 @@ def log_and_raise_exception(e: Exception):
 
 
 # ---------------- Routes ----------------
-@router.get("/")
+@router.get("/dataset_json/list")
 async def get_dataset_json_list():
     """Retrieve dataset list asynchronously."""
     dirnames = raw.get_dataset_dirs()
@@ -65,7 +65,7 @@ async def get_dataset_json_list():
     return dataset_list
 
 
-@router.get("/ids")
+@router.get("/dataset_json/id-list")
 async def get_dataset_json_id_list():
     """Get dataset ID list"""
     ids = raw.get_dataset_dirs()
@@ -73,7 +73,7 @@ async def get_dataset_json_id_list():
     return ids
 
 
-@router.post("/")
+@router.post("/dataset_json/new")
 async def post_dataset(request: Request):
     """Create a new dataset with validation."""
     try:
