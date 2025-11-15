@@ -4,14 +4,13 @@ import os, re, json, shutil, zipfile
 from datetime import datetime
 from json import JSONDecodeError
 from pathlib import Path
+from app.core.nnunet_worker import run_nnunet_predict
 
 from rq import Queue
 import redis
 
 router = APIRouter()
 
-r = redis.Redis.from_url(settings.REDIS_URL)
-q = Queue("nnunet_jobs", connection=r)
 
 
 # settings
@@ -35,6 +34,12 @@ Path(nnunet_results_dir).mkdir(parents=True, exist_ok=True)
 Path(nnunet_predictions_dir).mkdir(parents=True, exist_ok=True)
 
 logger.info(f"nnunet_data_dir={nnunet_data_dir}")
+logger.info(f"nnunet_predictions_dir={nnunet_predictions_dir}")
+
+queue_name = "nnunet_jobs"
+r = redis.Redis.from_url(settings.REDIS_URL)
+q = Queue(queue_name, connection=r)
+logger.info(f"Connected to Redis queue '{queue_name}' at {settings.REDIS_URL}")
 
 # Core module
 import app.core.nnunet_raw as nnunet_raw
@@ -265,18 +270,61 @@ async def post_prediction_request(
         with open(req_path, "w") as f:
             json.dump(req, f, indent=4)
 
-        # submit the job to RQ
-        job = q.enqueue(
-            "app.core.nnunet_worker.run_nnunet_predict",
-            job_metadata={
-                "dataset_id": dataset_id,
-                "req_id": req["req_id"],
-                "input_path": image_path,
-            },
-            job_timeout=settings.NNUNET_JOB_TIMEOUT_SECONDS,
-        )
-        logger.info(f"Enqueued nnU-Net job: {job.id} for request: {req['req_id']}")
+        # --- Define the Job Metadata (Matching the Command) ---
 
+        # The dataset ID requested by the -d flag
+        DATASET_ID = dataset_id 
+
+        # The full input directory path requested by the -i flag
+        INPUT_PATH = req_dir # "/home/jk/data/nnunet_data/predictions/Dataset015_CBCTBladderRectumBowel2/req_000"
+
+        # --- Pre-flight Check: Ensure the input directory exists ---
+        # Note: Since this path is likely on the server where the worker runs, 
+        # we rely on the worker to handle the error if it doesn't exist.
+        # But for a local test, we assume it does:
+        # Path(INPUT_PATH).mkdir(parents=True, exist_ok=True) 
+
+        JOB_METADATA = {
+            # Unique ID for tracking this specific job
+            "job_id": f"job_for_{req['req_id']}", 
+            
+            # Corresponds to -d 015
+            "dataset_id": DATASET_ID, 
+            
+            # Corresponds to -i /path/to/input
+            "input_dir": INPUT_PATH, 
+            
+            # Corresponds to -c 3d_lowres
+            "configuration": "3d_lowres",
+            
+            # Corresponds to -device gpu (If your worker uses this to set the device)
+            "device": "gpu", 
+            
+            # Standard nnU-Net keys, usually defaults if not overridden
+            "trainer": "nnUNetTrainer", 
+            "plans": "nnUNetPlans",
+            "requester_id": "vtk_image_labeler_3d@varianEclipseTest",
+        }
+
+
+        # --- Submission Logic ---
+        logger.info(f"Submitting nnU-Net prediction job {JOB_METADATA['job_id']}...")
+
+        # Enqueue the job, passing the entire JOB_METADATA dictionary as the only argument
+        job = q.enqueue(
+            run_nnunet_predict, # The function the worker will execute
+            JOB_METADATA,       # The required dictionary of parameters
+            job_timeout='3h',   # Allow ample time for a large segmentation job
+            result_ttl=604800    # Keep results for 7 days
+        )
+
+        logger.info(f"\nJob submitted successfully to queue '{queue_name}'.")
+        logger.info(f"  Job ID: {job.id}")
+        
+        logger.debug(f"Attaching job info to response.")
+        req['job_id'] = job.id
+
+        logger.debug(f"Returning req={req}")
         return req
 
     except Exception as e:

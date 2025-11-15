@@ -77,7 +77,6 @@ def run_nnunet_predict(job_metadata: dict) -> dict:
             trainer,
             plans,
         ]
-        
         logger.info(f"[{job_id}] Executing command: {' '.join(cmd)}")
 
         # --- Run inference ---
