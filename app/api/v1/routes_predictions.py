@@ -54,15 +54,15 @@ def log_request(request: Request):
 def log_exception(e):
     logger.error("Exception occurred", exc_info=e)
 
+import uuid
+
 def create_unique_request_dir(dataset_path: str) -> str:
     os.makedirs(dataset_path, exist_ok=True)
-    for num in range(1000):
-        req_dir = os.path.join(dataset_path, f"req_{num:03}")
-        if not os.path.exists(req_dir):
-            os.makedirs(req_dir)
-            return req_dir
-    raise RuntimeError("Too many requests: could not create a unique request directory.")
+    req_dir = os.path.join(dataset_path, f"req_{str(uuid.uuid4())}")
+    os.makedirs(req_dir, exist_ok=False)
+    return req_dir
 
+    
 async def get_file_ending(dataset_id):
     try:
         dataset_info = await nnunet_raw.read_dataset_json(dirname=dataset_id)
