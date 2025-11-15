@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     SLURM_USER: str = "jinkokim"
     NNUNET_DATA_DIR: str
     JOB_PROCESSOR: str = "slurm"
+    REDIS_URL: str = "redis://localhost:6379/0"
 
     venv_dir: str = "/home/jk/nnunet/_venv"
     scripts_dir: str = "/home/jk/projects/nnunet_server/scripts"

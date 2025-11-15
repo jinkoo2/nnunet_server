@@ -5,7 +5,13 @@ from datetime import datetime
 from json import JSONDecodeError
 from pathlib import Path
 
+from rq import Queue
+import redis
+
 router = APIRouter()
+
+r = redis.Redis.from_url(settings.REDIS_URL)
+q = Queue("nnunet_jobs", connection=r)
 
 
 # settings
@@ -202,6 +208,8 @@ async def get_prediction(dataset_id: str = Query(...), req_id: str = Query(...),
 
     return item
 
+
+# image_id is saved and send it back to the requester. It's used to identify the image. In principle, the client should keep this information on their own, not giving this info to the server.
 @router.post("/predictions")
 async def post_prediction_request(
     request: Request,
@@ -256,6 +264,18 @@ async def post_prediction_request(
         req_path = os.path.join(req_dir, "req.json")
         with open(req_path, "w") as f:
             json.dump(req, f, indent=4)
+
+        # submit the job to RQ
+        job = q.enqueue(
+            "app.core.nnunet_worker.run_nnunet_predict",
+            job_metadata={
+                "dataset_id": dataset_id,
+                "req_id": req["req_id"],
+                "input_path": image_path,
+            },
+            job_timeout=settings.NNUNET_JOB_TIMEOUT_SECONDS,
+        )
+        logger.info(f"Enqueued nnU-Net job: {job.id} for request: {req['req_id']}")
 
         return req
 

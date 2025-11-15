@@ -20,6 +20,7 @@ python-multipart = "^0.0.20"
 nnunetv2 = "^2.6.2"
 rq = "^2.6.0"
 rq-dashboard = "^0.8.5"
+redis = "^7.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
